@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOUVD — Music Production · Artistic Projects · Cultural Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #161616;
+    --text: #e8e2d9;
+    --text-muted: #7a7570;
+    --text-dim: #4a4540;
+    --gold: #c8a96e;
+    --gold-dim: #8a7249;
+    --white: #f5f0e8;
+    --border: rgba(200,169,110,0.15);
+    --border-dim: rgba(255,255,255,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(200,169,110,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+  a:hover ~ .cursor, button:hover ~ .cursor { transform: translate(-50%, -50%) scale(2); }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* SECTIONS */
+  section { position: relative; }
+
+  /* ─── HERO ─── */
+  #hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0d0a14 0%, #0a0a0a 40%, #0e0c08 100%);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(120,80,200,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 70%, rgba(200,169,110,0.05) 0%, transparent 60%);
+  }
+  .hero-overline {
+    position: relative;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero-overline::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .hero-title {
+    position: relative;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(100px, 14vw, 200px);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-title span {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(248,240,232,0.25);
+  }
+  .hero-sub {
+    position: relative;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-links {
+    position: relative;
+    display: flex;
+    gap: 32px;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+  .hero-link {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transition: color 0.3s;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+  }
+  .hero-link:hover { color: var(--gold); border-color: var(--gold-dim); }
+  .hero-link svg { width: 17px; height: 17px; opacity: 0.6; }
+  .hero-scroll {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    writing-mode: vertical-rl;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeIn 1s 1.4s forwards;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--text-dim), transparent);
+    animation: scrollLine 2s 2s infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    padding: 140px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    border-top: 1px solid var(--border-dim);
+  }
+  .about-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 48px;
+  }
+  .about-quote em {
+    color: var(--gold);
+    font-style: normal;
+  }
+  .about-body {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .about-body p + p { margin-top: 20px; }
+  .about-right {
+    padding-top: 8px;
+  }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .about-bio-text {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .about-bio-text p + p { margin-top: 20px; }
+
+  /* ─── PROJECTS INTRO ─── */
+  .projects-header {
+    padding: 100px 60px 60px;
+    border-top: 1px solid var(--border-dim);
+  }
+  .projects-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6vw, 90px);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--white);
+  }
+  .projects-header h2 span {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(248,240,232,0.2);
+  }
+
+  /* ─── PROJECT CARD ─── */
+  .project {
+    padding: 80px 60px;
+    border-top: 1px solid var(--border-dim);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    transition: background 0.4s;
+  }
+  .project:hover { background: rgba(255,255,255,0.01); }
+  .project.reverse { direction: rtl; }
+  .project.reverse > * { direction: ltr; }
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .project-tag {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 5px 12px;
+  }
+  .project-tag.dev {
+    color: var(--text-muted);
+    border-color: var(--border-dim);
+  }
+  .project-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .project-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .project-title a:hover { color: var(--gold); }
+  .project-desc {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .project-credits {
+    border-top: 1px solid var(--border-dim);
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .credit-line {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+  .credit-line strong {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .credit-role {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+  .credit-role span { font-weight: 400; color: var(--text-muted); }
+  .project-visual {
+    position: relative;
+  }
+  .project-img-box {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--bg3);
+    overflow: hidden;
+    position: relative;
+  }
+  .project-img-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,169,110,0.04) 0%, transparent 60%);
+  }
+  .project-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    font-weight: 700;
+    color: rgba(200,169,110,0.08);
+    letter-spacing: -0.02em;
+  }
+  .project-social {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .project-social:hover { color: var(--gold); }
+  .project-social svg { width: 15px; height: 15px; }
+
+  /* ─── SOUNDTRACKS ─── */
+  #soundtracks {
+    padding: 100px 60px;
+    border-top: 1px solid var(--border-dim);
+    background: var(--bg2);
+  }
+  .soundtracks-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .soundtracks-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .soundtracks-intro {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+  .works-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .work-card {
+    background: var(--bg3);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .work-card:hover { background: #1a1a1a; }
+  .work-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px;
+    height: 0;
+    background: var(--gold);
+    transition: height 0.5s ease;
+  }
+  .work-card:hover::before { height: 100%; }
+  .work-card-tag {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .work-card-tag.dev { color: var(--text-dim); }
+  .work-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .work-subtitle {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
+  .work-desc {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+  .work-credits {
+    border-top: 1px solid var(--border-dim);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .work-credit {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .work-credit strong {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .work-role {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+  .work-role span { font-weight: 400; color: var(--text-muted); letter-spacing: 0; }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    padding: 140px 60px;
+    border-top: 1px solid var(--border-dim);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+  }
+  .contact-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6vw, 88px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .contact-headline strong {
+    font-style: normal;
+    font-weight: 700;
+    display: block;
+    color: var(--white);
+  }
+  .contact-tagline {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 420px;
+    margin-bottom: 48px;
+  }
+  .contact-right {
+    padding-bottom: 4px;
+  }
+  .contact-group {
+    margin-bottom: 40px;
+  }
+  .contact-group-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .contact-group-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .contact-item {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .contact-item a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .contact-item a:hover { color: var(--gold); }
+  .contact-item .label {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    min-width: 80px;
+  }
+  .footer-bar {
+    border-top: 1px solid var(--border-dim);
+    margin-top: 80px;
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+
+  /* DIVIDER LINE */
+  .gold-line {
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px 0;
+  }
+
+  /* IMAGES & LOGOS */
+  .project-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-title-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    margin-bottom: 32px;
+  }
+  .hero-title-row .hero-title { margin-bottom: 0; }
+  .hero-logo {
+    height: clamp(170px, 27vw, 380px);
+    width: auto;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+  .live-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    border-top: 1px solid var(--border-dim);
+    background: var(--bg2);
+  }
+  .live-gallery figure {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--bg3);
+  }
+  .live-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.25) contrast(1.05);
+    transition: transform 0.8s ease, filter 0.6s ease;
+  }
+  .live-gallery figure:hover img {
+    transform: scale(1.05);
+    filter: none;
+  }
+  .project-brand {
+    height: 56px;
+    width: auto;
+    margin-bottom: 22px;
+    display: block;
+  }
+  .partner-logos {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .partner-logos .partner-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .partner-logos img {
+    height: 38px;
+    width: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+  }
+  .partner-logos img:hover { opacity: 1; }
+  .partner-logos img.altrove {
+    mix-blend-mode: screen;
+  }
+  .project-logo-box {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: transparent;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8%;
+  }
+  .project-logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    position: relative;
+  }
+  .work-card-img {
+    margin: -48px -48px 28px -48px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .work-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+  }
+  .work-card:hover .work-card-img img { transform: scale(1.04); }
+
+  /* PROJECT LOGO LAYOUT */
+  .project--logo { align-items: center; }
+
+  /* RINASCITA BRAND */
+  .rf-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: nowrap;
+    margin-bottom: 24px;
+  }
+  .rf-titlebar .project-title { margin-bottom: 0; }
+  .rf-titlebar-logos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  .rf-titlebar-logos a { display: inline-flex; align-items: center; }
+  .rf-partner {
+    width: auto;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+  }
+  .rf-partner:hover { opacity: 1; }
+  .rf-partner--altrove { height: 36px; }
+  .rf-partner--monkey { height: 56px; }
+  .rf-logo {
+    display: block;
+    margin: 0 auto 44px;
+    width: auto;
+    height: clamp(190px, 25vw, 300px);
+  }
+
+  /* CAROUSEL */
+  .carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.45, 0, 0.15, 1);
+  }
+  .carousel.dragging .carousel-track { transition: none; }
+  .carousel-slide {
+    min-width: 100%;
+    height: 100%;
+  }
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+  }
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(10,10,10,0.55);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    opacity: 0;
+    transition: opacity 0.3s, background 0.3s, color 0.3s;
+    z-index: 3;
+  }
+  .carousel:hover .carousel-btn { opacity: 1; }
+  .carousel-btn:hover { background: var(--gold); color: #0a0a0a; }
+  .carousel-btn.prev { left: 14px; }
+  .carousel-btn.next { right: 14px; }
+  .carousel-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 3;
+  }
+  .carousel-dots button {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    padding: 0;
+    border: none;
+    background: rgba(245,240,232,0.35);
+    cursor: none;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .carousel-dots button.active {
+    background: var(--gold);
+    transform: scale(1.25);
+  }
+  .rf-carousel {
+    aspect-ratio: 3 / 2;
+    background: var(--bg3);
+    border: 1px solid var(--border-dim);
+  }
+
+  /* CYBERSESSO GLITCH VISUAL */
+  .work-card-img--cyber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 40%, #2b2b2b 0%, #141414 60%, #090909 100%);
+  }
+  .work-card-img--cyber::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 3px);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .glitch {
+    position: relative;
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4.4vw, 50px);
+    letter-spacing: 0.04em;
+    color: #f4f1ea;
+    text-shadow: 0 0 18px rgba(255,255,255,0.22);
+    z-index: 1;
+  }
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .glitch::before {
+    color: #ffffff;
+    clip-path: inset(0 0 52% 0);
+    animation: glitchTop 2.6s infinite steps(2) alternate-reverse;
+  }
+  .glitch::after {
+    color: #6e6e6e;
+    clip-path: inset(50% 0 0 0);
+    animation: glitchBottom 2s infinite steps(2) alternate-reverse;
+  }
+  @keyframes glitchTop {
+    0%   { transform: translate(0, 0); }
+    20%  { transform: translate(-3px, -1px); }
+    40%  { transform: translate(2px, 1px); }
+    60%  { transform: translate(-2px, 0); }
+    80%  { transform: translate(3px, -1px); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes glitchBottom {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(2px, 1px); }
+    50%  { transform: translate(-3px, 0); }
+    75%  { transform: translate(2px, -1px); }
+    100% { transform: translate(0, 0); }
+  }
+  .cyber-wrap { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
+  .cyber-tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 24px 28px; }
+    .nav-links { display: none; }
+    #hero { padding: 0 28px 60px; }
+    .hero-title { font-size: clamp(72px, 18vw, 120px); }
+    .hero-scroll { display: none; }
+    #about, .project, #contact {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      padding: 80px 28px;
+    }
+    .project.reverse { direction: ltr; }
+    .works-grid { grid-template-columns: 1fr; }
+    #soundtracks { padding: 80px 28px; }
+    .projects-header { padding: 80px 28px 40px; }
+    .work-card { padding: 32px; }
+    .live-gallery { grid-template-columns: 1fr; }
+    .work-card-img { margin: -32px -32px 24px -32px; }
+    .hero-title-row { grid-template-columns: 1fr; gap: 20px; }
+    .hero-logo { height: clamp(90px, 26vw, 160px); margin: 0; }
+    .rf-logo { height: 160px; margin-bottom: 32px; }
+    .footer-bar { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">HOUVD</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#soundtracks">Soundtracks</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overline">Music Production · Artistic Projects · Cultural Events</div>
+  <div class="hero-title-row">
+    <h1 class="hero-title">HOUVD</h1>
+    <img src="Houvd_Logo.png" alt="Houvd" class="hero-logo">
+  </div>
+  <p class="hero-sub">Songwriter &nbsp;·&nbsp; Producer &nbsp;·&nbsp; Creative Project Curator</p>
+  <div class="hero-links">
+    <a href="https://open.spotify.com/intl-it/artist/7IjZg6wVw5MlaIrsMdnmpJ" target="_blank" class="hero-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      Spotify
+    </a>
+    <a href="https://www.instagram.com/houvd__/" target="_blank" class="hero-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @houvd__
+    </a>
+    <a href="mailto:twinhcollective@gmail.com" class="hero-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      twinhcollective@gmail.com
+    </a>
+  </div>
+  <div class="hero-scroll"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left reveal">
+    <p class="about-quote">
+      Music as <em>expression</em>, collaboration and shared experience.
+    </p>
+    <p class="about-body">
+      I experience music as the deepest form of my artistic expression and as a space for connection, sharing and collaboration.
+    </p>
+    <span class="gold-line"></span>
+    <p class="about-body">
+      Through songwriting, music production, collective projects and cultural events, I aim to create artistic experiences that connect personal expression, shared emotions and creative exchange.
+    </p>
+    <p class="about-body" style="margin-top:20px">
+      I am especially drawn to collaborations with artists and people who are able to communicate something authentic through their sensitivity, vision and artistic language.
+    </p>
+  </div>
+  <div class="about-right reveal" style="transition-delay:0.15s">
+    <div class="section-label">Artist Bio</div>
+    <div class="about-bio-text">
+      <p>Giuseppe Longo, alias Houvd, is a Calabrian artist born in 2001 at Vibo Valentia. Growing up in close contact with music, he developed a strong passion for hip hop culture from a young age, combining his study of drums with the listening of Italian and international rap, R&B and reggae artists.</p>
+      <p>In 2020, he began releasing self-produced songs, developing over the years a personal path based on songwriting, production and sound experimentation. In 2022, he released the EP <em>Voce</em>, a project that represents an important step in his artistic research.</p>
+      <p>Alongside his creative work, he pursued technical studies related to music informatics and audio technologies, approaching music also from an engineering perspective. Today, he continues to produce, write and collaborate, experiencing music as a form of personal expression and a space for sharing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE PHOTOS -->
+<section class="live-gallery reveal" aria-label="Houvd live">
+  <figure><img src="H_3.jpg" alt="Houvd live performance" loading="lazy"></figure>
+  <figure><img src="H_2.jpg" alt="Houvd live performance" loading="lazy"></figure>
+  <figure><img src="H_1.JPEG" alt="Houvd live performance" loading="lazy"></figure>
+</section>
+
+<!-- PROJECTS -->
+
+<!-- TWIN H COLLECTIVE -->
+<div class="project reveal project--logo" id="projects">
+  <div class="project-info">
+    <div class="project-meta">
+      <span class="project-tag">Collective</span>
+      <span class="project-tag">Founder</span>
+    </div>
+    <h3 class="project-title">Twin H Collective</h3>
+    <p class="project-desc">Twin H Collective is an artistic collective focused mainly on music, born with the aim of creating and promoting collaborative projects rooted in sound, identity and cultural expression.</p>
+    <p class="project-desc">While music represents its starting point, the collective's long-term vision is to expand into audiovisual content, cultural events and multidisciplinary artistic experiences.</p>
+    <p class="project-desc">As a founder and active member, I contribute to the artistic direction, music production, project organization and development of the collective's creative identity.</p>
+    <a href="https://www.instagram.com/twinhcollective/" target="_blank" class="project-social">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @twinhcollective
+    </a>
+  </div>
+  <div class="project-visual">
+    <div class="project-logo-box">
+      <img src="Twin_H_LOGO_White_No_Background.PNG" alt="Twin H Collective">
+    </div>
+  </div>
+</div>
+
+<!-- RINASCITA FLOW -->
+<div class="project reverse reveal">
+  <div class="project-info">
+    <div class="project-meta">
+      <span class="project-tag">Cultural Event</span>
+      <span class="project-tag">Co-organizer</span>
+    </div>
+    <div class="rf-titlebar">
+      <h3 class="project-title">
+        <a href="https://www.altrovecantiereculturale.org/rinascitaflow/" target="_blank">Rinascita Flow</a>
+      </h3>
+      <div class="rf-titlebar-logos">
+        <a href="https://www.instagram.com/altrovecantiereculturale/" target="_blank" rel="noopener" aria-label="Altrove su Instagram">
+          <img class="rf-partner rf-partner--altrove" src="Logo_Altrove_white.png" alt="Altrove Associazione Culturale">
+        </a>
+        <a href="https://www.instagram.com/_monkeystudio_/" target="_blank" rel="noopener" aria-label="High Monkey Studio su Instagram">
+          <img class="rf-partner rf-partner--monkey" src="HIGH%20MONKEY%20STUDIO%20LOGO.png" alt="High Monkey Studio">
+        </a>
+      </div>
+    </div>
+    <div class="project-credits" style="border:none;padding:0;margin-bottom:24px">
+      <div class="credit-line"><strong>Produced by</strong> Altrove Associazione Culturale</div>
+      <div class="credit-line"><strong>Co-organized with</strong> Twin H Collective &amp; High Monkey Studio</div>
+    </div>
+    <p class="project-desc">A cultural event dedicated to the promotion of Hip Hop culture in the Vibo Valentia area. The project was created to give space to local artistic voices and strengthen the connection between music, territory and community.</p>
+    <p class="project-desc">The event celebrates Hip Hop as a cultural language based on expression, identity, sharing and social presence, creating opportunities for artists and audiences to connect.</p>
+    <div class="credit-role">My role <span>— co-organization, creative and technical support, artistic direction and operational coordination.</span></div>
+    <a href="https://www.instagram.com/rinascita_flow/" target="_blank" class="project-social" style="margin-top:24px">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @rinascita_flow
+    </a>
+  </div>
+  <div class="project-visual">
+    <img class="rf-logo" src="Rinascita_Flow_Fiore_Logo.png" alt="Rinascita Flow">
+    <div class="carousel rf-carousel" data-carousel data-autoplay>
+      <div class="carousel-track">
+        <div class="carousel-slide"><img src="RF_1.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="RF_2.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="RF_3.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="RF_4.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+      </div>
+      <button class="carousel-btn prev" aria-label="Previous">‹</button>
+      <button class="carousel-btn next" aria-label="Next">›</button>
+      <div class="carousel-dots"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SOUNDTRACKS & PERFORMING ARTS -->
+<section id="soundtracks">
+  <div class="soundtracks-header reveal">
+    <div class="section-label" style="justify-content:center">Performing Arts &amp; Film</div>
+    <h2 class="soundtracks-title">Soundtracks &amp;<br>Performing Arts</h2>
+    <p class="soundtracks-intro">I also explore music as a narrative and emotional device for visual and stage-based projects. In these works, sound becomes a way to support the atmosphere, enhance the storytelling and connect the audience with the emotional identity of the piece.</p>
+  </div>
+
+  <div class="works-grid">
+    <!-- IL GIOCO DELLE SEDIE -->
+    <div class="work-card reveal">
+      <div class="work-card-img">
+        <div class="carousel" data-carousel data-autoplay>
+          <div class="carousel-track">
+            <div class="carousel-slide"><img src="GDS_1.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+            <div class="carousel-slide"><img src="GDS_2.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+            <div class="carousel-slide"><img src="GDS_3.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+          </div>
+          <button class="carousel-btn prev" aria-label="Previous">‹</button>
+          <button class="carousel-btn next" aria-label="Next">›</button>
+          <div class="carousel-dots"></div>
+        </div>
+      </div>
+      <div class="work-card-tag">Short Film · 2024</div>
+      <h3 class="work-title">Il Gioco delle Sedie</h3>
+      <p class="work-desc">Set inside an anonymous facility where individuals live under a rigid and repetitive daily ritual. Every day at 3:00 PM, the routine culminates in the "Gioco delle Sedie" — musical chairs — turning a childhood game into a symbolic struggle for power, recognition and survival.</p>
+      <div class="work-credits">
+        <div class="work-credit"><strong>Director</strong> Anastasia Vittoria Sarro</div>
+        <div class="work-credit"><strong>Production</strong> Studio Ireos Student Team</div>
+        <div class="work-credit"><strong>Funded by</strong> Politecnico di Torino</div>
+        <div class="work-credit"><strong>Original music &amp; programming</strong> Emilio Bazan</div>
+        <div class="work-credit"><strong>Co-composition &amp; arrangement</strong> Ariadna Ortega</div>
+        <div class="work-role">My role <span>— Author of the ballad "Il Gioco delle Sedie"</span></div>
+      </div>
+    </div>
+
+    <!-- CYBERSESSO -->
+    <div class="work-card reveal" style="transition-delay:0.15s">
+      <div class="work-card-img work-card-img--cyber">
+        <div class="cyber-wrap">
+          <span class="glitch" data-text="Cybersesso">Cybersesso</span>
+        </div>
+      </div>
+      <div class="work-card-tag dev">Theatre · Performance Project</div>
+      <h3 class="work-title">Cybersesso</h3>
+      <p class="work-subtitle" style="color:var(--gold);opacity:0.6">· In Development</p>
+      <p class="work-desc">Explores a fragmented inner world filtered through the narration of a character who observes and controls multiple realities at once. In the digital age, the difficulty of creating genuine connection becomes unsettling — love is replaced by the fear of being absorbed, while desire remains present.</p>
+      <div class="work-credits">
+        <div class="work-credit"><strong>Written by</strong> Flavio Innocenti</div>
+        <div class="work-credit"><strong>Directed by</strong> Teresa Noemi Bove</div>
+        <div class="work-role">My role <span>— Original music, composition, arrangement and full music production</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left reveal">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="contact-headline">
+      Let's<br>
+      <strong>create<br>together.</strong>
+    </h2>
+    <p class="contact-tagline">Open to collaborations in music production, songwriting, soundtracks, cultural events and multidisciplinary artistic projects.</p>
+  </div>
+  <div class="contact-right reveal" style="transition-delay:0.15s">
+    <div class="contact-group">
+      <div class="contact-group-label">Listen &amp; Follow</div>
+      <div class="contact-items">
+        <div class="contact-item">
+          <span class="label">Spotify</span>
+          <a href="https://open.spotify.com/intl-it/artist/7IjZg6wVw5MlaIrsMdnmpJ" target="_blank">Houvd</a>
+        </div>
+        <div class="contact-item">
+          <span class="label">Instagram</span>
+          <a href="https://www.instagram.com/houvd__/" target="_blank">@houvd__</a>
+        </div>
+      </div>
+    </div>
+    <div class="contact-group">
+      <div class="contact-group-label">Projects</div>
+      <div class="contact-items">
+        <div class="contact-item">
+          <span class="label">Collective</span>
+          <a href="https://www.instagram.com/twinhcollective/" target="_blank">@twinhcollective</a>
+        </div>
+        <div class="contact-item">
+          <span class="label">Event</span>
+          <a href="https://www.instagram.com/rinascita_flow/" target="_blank">@rinascita_flow</a>
+        </div>
+      </div>
+    </div>
+    <div class="contact-group">
+      <div class="contact-group-label">Contact</div>
+      <div class="contact-items">
+        <div class="contact-item">
+          <span class="label">Email</span>
+          <a href="mailto:twinhcollective@gmail.com">twinhcollective@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <span class="label">DM</span>
+          <a href="https://www.instagram.com/houvd__/" target="_blank">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar" style="grid-column:1/-1">
+    <span class="footer-name">HOUVD</span>
+    <span>Songwriter · Producer · Creative Project Curator</span>
+    <span>© 2025</span>
+  </div>
+</section>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.opacity = '0'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '1'; });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Carousels
+  document.querySelectorAll('[data-carousel]').forEach(car => {
+    const track = car.querySelector('.carousel-track');
+    const slides = Array.from(car.querySelectorAll('.carousel-slide'));
+    const prev = car.querySelector('.carousel-btn.prev');
+    const next = car.querySelector('.carousel-btn.next');
+    const dotsWrap = car.querySelector('.carousel-dots');
+    if (!track || slides.length === 0) return;
+    let i = 0;
+    slides.forEach((_, idx) => {
+      const b = document.createElement('button');
+      b.setAttribute('aria-label', 'Slide ' + (idx + 1));
+      b.addEventListener('click', () => go(idx));
+      dotsWrap.appendChild(b);
+    });
+    const dots = Array.from(dotsWrap.children);
+    function update() {
+      track.style.transform = 'translateX(-' + (i * 100) + '%)';
+      dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    }
+    function go(n) { i = (n + slides.length) % slides.length; update(); }
+    if (prev) prev.addEventListener('click', () => go(i - 1));
+    if (next) next.addEventListener('click', () => go(i + 1));
+    update();
+
+    // Autoplay
+    let timer = null;
+    const auto = car.hasAttribute('data-autoplay') && slides.length > 1;
+    function startAuto() { if (auto) { stopAuto(); timer = setInterval(() => go(i + 1), 4500); } }
+    function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+    car.addEventListener('mouseenter', stopAuto);
+    car.addEventListener('mouseleave', startAuto);
+    startAuto();
+
+    // Drag / swipe with mouse & touch
+    let dragging = false, startX = 0, baseX = 0, width = 0, moved = 0;
+    track.querySelectorAll('img').forEach(img => img.addEventListener('dragstart', e => e.preventDefault()));
+    car.addEventListener('pointerdown', e => {
+      if (e.target.closest('.carousel-btn') || e.target.closest('.carousel-dots')) return;
+      dragging = true;
+      width = car.clientWidth;
+      startX = e.clientX;
+      baseX = -i * width;
+      moved = 0;
+      stopAuto();
+      car.classList.add('dragging');
+      if (car.setPointerCapture) car.setPointerCapture(e.pointerId);
+    });
+    car.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      moved = e.clientX - startX;
+      track.style.transform = 'translateX(' + (baseX + moved) + 'px)';
+    });
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      car.classList.remove('dragging');
+      const threshold = width * 0.18;
+      if (moved < -threshold) go(i + 1);
+      else if (moved > threshold) go(i - 1);
+      else update();
+      startAuto();
+    }
+    car.addEventListener('pointerup', endDrag);
+    car.addEventListener('pointercancel', endDrag);
+    car.addEventListener('pointerleave', endDrag);
+
+    // Wheel / trackpad scroll (horizontal intent) — like the page's vertical scroll
+    let wheelLock = false, wheelAcc = 0;
+    car.addEventListener('wheel', e => {
+      if (slides.length < 2) return;
+      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (!horizontal) return; // let the page scroll vertically
+      e.preventDefault();
+      stopAuto();
+      if (wheelLock) return;
+      wheelAcc += e.deltaX;
+      if (Math.abs(wheelAcc) > 30) {
+        go(i + (wheelAcc > 0 ? 1 : -1));
+        wheelAcc = 0;
+        wheelLock = true;
+        setTimeout(() => { wheelLock = false; startAuto(); }, 450);
+      }
+    }, { passive: false });
+  });
+</script>
+</body>
+</html>
