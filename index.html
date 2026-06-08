@@ -966,8 +966,19 @@
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    nav { padding: 24px 28px; }
-    .nav-links { display: none; }
+    nav {
+      padding: 18px 24px;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .nav-logo { font-size: 20px; }
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav-links a { font-size: 11px; letter-spacing: 0.12em; }
     #hero { padding: 0 28px 60px; }
     .hero-title { font-size: clamp(72px, 18vw, 120px); }
     .hero-scroll { display: none; }
@@ -984,7 +995,16 @@
     .live-gallery { grid-template-columns: 1fr; }
     .work-card-img { margin: -32px -32px 24px -32px; }
     .hero-title-row { grid-template-columns: 1fr; gap: 20px; }
-    .hero-logo { height: clamp(90px, 26vw, 160px); margin: 0; }
+    .hero-logo { display: none; }
+    .hero-links {
+      flex-direction: column;
+      gap: 18px;
+    }
+    .hero-link {
+      font-size: 14px;
+      max-width: 100%;
+      word-break: break-word;
+    }
     .rf-logo { height: 160px; margin-bottom: 32px; }
     .footer-bar { flex-direction: column; gap: 12px; text-align: center; }
   }
@@ -1012,7 +1032,7 @@
   <div class="hero-overline">Music Production · Artistic Projects · Cultural Events</div>
   <div class="hero-title-row">
     <h1 class="hero-title">HOUVD</h1>
-    <img src="Houvd_Logo.png" alt="Houvd" class="hero-logo">
+    <img src="assets/Houvd_Logo.png" alt="Houvd" class="hero-logo">
   </div>
   <p class="hero-sub">Songwriter &nbsp;·&nbsp; Producer &nbsp;·&nbsp; Creative Project Curator</p>
   <div class="hero-links">
@@ -1061,9 +1081,9 @@
 
 <!-- LIVE PHOTOS -->
 <section class="live-gallery reveal" aria-label="Houvd live">
-  <figure><img src="H_3.jpg" alt="Houvd live performance" loading="lazy"></figure>
-  <figure><img src="H_2.jpg" alt="Houvd live performance" loading="lazy"></figure>
-  <figure><img src="H_1.JPEG" alt="Houvd live performance" loading="lazy"></figure>
+  <figure><img src="assets/H_3.jpg" alt="Houvd live performance" loading="lazy"></figure>
+  <figure><img src="assets/H_2.jpg" alt="Houvd live performance" loading="lazy"></figure>
+  <figure><img src="assets/H_1.JPEG" alt="Houvd live performance" loading="lazy"></figure>
 </section>
 
 <!-- PROJECTS -->
@@ -1086,7 +1106,7 @@
   </div>
   <div class="project-visual">
     <div class="project-logo-box">
-      <img src="Twin_H_LOGO_White_No_Background.PNG" alt="Twin H Collective">
+      <img src="assets/Twin_H_LOGO_White_No_Background.PNG" alt="Twin H Collective">
     </div>
   </div>
 </div>
@@ -1104,10 +1124,10 @@
       </h3>
       <div class="rf-titlebar-logos">
         <a href="https://www.instagram.com/altrovecantiereculturale/" target="_blank" rel="noopener" aria-label="Altrove su Instagram">
-          <img class="rf-partner rf-partner--altrove" src="Logo_Altrove_white.png" alt="Altrove Associazione Culturale">
+          <img class="rf-partner rf-partner--altrove" src="assets/Logo_Altrove_white.png" alt="Altrove Associazione Culturale">
         </a>
         <a href="https://www.instagram.com/_monkeystudio_/" target="_blank" rel="noopener" aria-label="High Monkey Studio su Instagram">
-          <img class="rf-partner rf-partner--monkey" src="HIGH%20MONKEY%20STUDIO%20LOGO.png" alt="High Monkey Studio">
+          <img class="rf-partner rf-partner--monkey" src="assets/HIGH%20MONKEY%20STUDIO%20LOGO.png" alt="High Monkey Studio">
         </a>
       </div>
     </div>
@@ -1124,13 +1144,13 @@
     </a>
   </div>
   <div class="project-visual">
-    <img class="rf-logo" src="Rinascita_Flow_Fiore_Logo.png" alt="Rinascita Flow">
+    <img class="rf-logo" src="assets/Rinascita_Flow_Fiore_Logo.png" alt="Rinascita Flow">
     <div class="carousel rf-carousel" data-carousel data-autoplay>
       <div class="carousel-track">
-        <div class="carousel-slide"><img src="RF_1.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
-        <div class="carousel-slide"><img src="RF_2.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
-        <div class="carousel-slide"><img src="RF_3.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
-        <div class="carousel-slide"><img src="RF_4.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="assets/RF_1.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="assets/RF_2.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="assets/RF_3.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
+        <div class="carousel-slide"><img src="assets/RF_4.JPG" alt="Rinascita Flow live event" loading="lazy"></div>
       </div>
       <button class="carousel-btn prev" aria-label="Previous">‹</button>
       <button class="carousel-btn next" aria-label="Next">›</button>
@@ -1153,9 +1173,9 @@
       <div class="work-card-img">
         <div class="carousel" data-carousel data-autoplay>
           <div class="carousel-track">
-            <div class="carousel-slide"><img src="GDS_1.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
-            <div class="carousel-slide"><img src="GDS_2.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
-            <div class="carousel-slide"><img src="GDS_3.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+            <div class="carousel-slide"><img src="assets/GDS_1.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+            <div class="carousel-slide"><img src="assets/GDS_2.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
+            <div class="carousel-slide"><img src="assets/GDS_3.png" alt="Il Gioco delle Sedie — short film" loading="lazy"></div>
           </div>
           <button class="carousel-btn prev" aria-label="Previous">‹</button>
           <button class="carousel-btn next" aria-label="Next">›</button>
